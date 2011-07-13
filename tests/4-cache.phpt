@@ -12,14 +12,14 @@ $db->debug = function($query, $parameters) {
 $articles = $db->article();
 foreach ($articles->limit(1) as $article) {
 	$article['viewed'];
-	$article['title'];
+	$article['title'];  // title je z prekladovej tabuľky article_trans
 }
 $articles->__destruct();
 
 $articles = $db->article();
 foreach ($articles->limit(1) as $article) {
 	$article['viewed'];
-	$article['title'];
+	$article['title'];  // title je z prekladovej tabuľky article_trans
 }
 
 ?>
