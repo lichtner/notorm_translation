@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
-include_once dirname(__FILE__) . "/../trans/Trans.php";
+include_once dirname(__FILE__) . "/../notorm_translator/Trans.php";
 
 $connection = new PDO("mysql:dbname=notorm_trans", "root", "",
 		array(PDO::MYSQL_ATTR_INIT_COMMAND =>  "SET NAMES 'UTF8'"));
