@@ -1,6 +1,5 @@
 <?php
 
-include_once dirname(__FILE__) . '/../notorm/NotORM.php';
 include_once dirname(__FILE__) . '/TransRow.php';
 include_once dirname(__FILE__) . '/TransStructure.php';
 

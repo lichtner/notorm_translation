@@ -1,5 +1,7 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
+
+include_once dirname(__FILE__) . '/../../notorm/NotORM.php';
 include_once dirname(__FILE__) . "/../notorm_translator/Trans.php";
 
 $connection = new PDO("mysql:dbname=notorm_trans", "root", "",
