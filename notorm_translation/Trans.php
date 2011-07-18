@@ -1,7 +1,7 @@
 <?php
 
-include_once dirname(__FILE__) . '/TransRow.php';
-include_once dirname(__FILE__) . '/TransStructure.php';
+include_once dirname(__FILE__) . '/RowTrans.php';
+include_once dirname(__FILE__) . '/StructureTrans.php';
 
 /**
  * @param PDO $connection
@@ -11,12 +11,10 @@ class NotORM_Trans extends NotORM {
 
 	public function setRowClass($rowClass) {
 		$this->rowClass = $rowClass;
-		return $this;
 	}
 
 	public function setLanguages($langPrimary, $langSecondary) {
 		$this->structure->setLanguages($langPrimary, $langSecondary);
-		return $this;
 	}
 
 	/**

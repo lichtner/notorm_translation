@@ -4,7 +4,7 @@
  * @param Trans_Structure $structure
  * @param NotORM_Result $result
  */
-class NotORM_Trans_Row extends NotORM_Row {
+class NotORM_Row_Trans extends NotORM_Row {
 
 	/**
 	 * keys are columns from translated table
