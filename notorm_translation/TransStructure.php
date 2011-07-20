@@ -1,6 +1,6 @@
 <?php
 
-interface NotORM_Structure_Trans_Interface {
+interface INotORM_Structure_Trans {
 
 	/** Get table with translation for $db->$table()
 	* @param string
@@ -40,7 +40,7 @@ interface NotORM_Structure_Trans_Interface {
 
 /** Structure described by some rules with trans tables
  */
-class NotORM_Structure_Trans extends NotORM_Structure_Convention implements NotORM_Structure_Trans_Interface {
+class NotORM_Structure_Trans extends NotORM_Structure_Convention implements INotORM_Structure_Trans {
 
 	private $connection;
 	protected $transTable, $transPrimary, $transLang;

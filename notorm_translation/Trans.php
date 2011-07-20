@@ -1,7 +1,7 @@
 <?php
 
-include_once dirname(__FILE__) . '/RowTrans.php';
-include_once dirname(__FILE__) . '/StructureTrans.php';
+include_once dirname(__FILE__) . '/TransRow.php';
+include_once dirname(__FILE__) . '/TransStructure.php';
 
 /**
  * @param PDO $connection
