@@ -22,7 +22,7 @@ class NotORM_Row_Trans extends NotORM_Row {
 			$transLang = $structure->getTransLang();
 			$this->transResult = $this->$transTable()
 						->order(new NotORM_Literal('IF(language = ?, 0, 1)', $structure->getLangPrimary()))
-						->order(new NotORM_Literal('IF(language = ?, 0, 1)', $structure->getLangSecondary()));
+						->order(new NotORM_Literal('IF(language = ?, 0, 1)', $structure->getLangSecondary()))->limit(1);
 			foreach ($this->transResult as $row) {
 				foreach ($row as $key => $val) {
 					$this->row[$key] = $val;
