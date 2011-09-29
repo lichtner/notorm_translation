@@ -13,16 +13,19 @@ class NotORM_Row_Trans extends NotORM_Row {
 
 	public $transResult;
 
-	function offsetExists($key) {
-		if (!isset($this->row[$key])) {
+	function offsetExists($offset) {
+		if (!isset($this->row[$offset])) {
 			$table = $this->result->table;
 			/* @var $structure Trans_Structure */
 			$structure = $this->result->notORM->structure;
 			$transTable = $structure->getTransTable($table);
 			$transLang = $structure->getTransLang();
+			$langPrimary = $structure->getLangPrimary();
+			$langSecondary = $structure->getLangSecondary();
 			$this->transResult = $this->$transTable()
-						->order(new NotORM_Literal('IF(language = ?, 0, 1)', $structure->getLangPrimary()))
-						->order(new NotORM_Literal('IF(language = ?, 0, 1)', $structure->getLangSecondary()))->limit(1);
+						->order("IF($transLang = '$langPrimary', 0, 1)")
+						->order("IF($transLang = '$langSecondary', 0, 1)")
+						->limit(1);
 			foreach ($this->transResult as $row) {
 				foreach ($row as $key => $val) {
 					$this->row[$key] = $val;
@@ -30,12 +33,12 @@ class NotORM_Row_Trans extends NotORM_Row {
 				}
 			}
 		}
-		return parent::offsetExists($key);
+		return parent::offsetExists($offset);
 	}
 
-	public function offsetGet($key) {
-		$this->offsetExists($key);
-		return parent::offsetGet($key);
+	public function offsetGet($offset) {
+		$this->offsetExists($offset);
+		return parent::offsetGet($offset);
 	}
 
 	public function offsetSet($key, $value) {
