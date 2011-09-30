@@ -14,23 +14,30 @@ class NotORM_Row_Trans extends NotORM_Row {
 	public $transResult;
 
 	function offsetExists($offset) {
-		if (!isset($this->row[$offset])) {
-			$table = $this->result->table;
-			/* @var $structure Trans_Structure */
-			$structure = $this->result->notORM->structure;
-			$transTable = $structure->getTransTable($table);
+		/* @var $structure NotORM_Structure_Trans */
+		$structure = $this->result->notORM->structure;
+		$table = $this->result->table;
+		$transTable = $structure->getTransTable($table);
+		if (!isset($this->row[$offset]) && $structure->hasTableColumn($transTable, $offset)) {
 			$transLang = $structure->getTransLang();
 			$langPrimary = $structure->getLangPrimary();
 			$langSecondary = $structure->getLangSecondary();
-			$this->transResult = $this->$transTable()
+			$result = $this->$transTable()
 						->order("IF($transLang = '$langPrimary', 0, 1)")
 						->order("IF($transLang = '$langSecondary', 0, 1)")
 						->limit(1);
-			foreach ($this->transResult as $row) {
-				foreach ($row as $key => $val) {
-					$this->row[$key] = $val;
-					$this->trans[$key] = true;
+			if (count($result)) {
+				foreach ($result as $row) {
+					foreach ($row as $key => $val) {
+						$this->row[$key] = $val;
+						$this->trans[$key] = true;
+					}
 				}
+			} else { # $structure->hasTableColumn($transTable, $offset)
+				# if no result in strings table, but $transTable has $offset
+				# so this column $offset is NULL
+				$this->row[$offset] = NULL;
+				$this->trans[$offset] = NULL;
 			}
 		}
 		return parent::offsetExists($offset);

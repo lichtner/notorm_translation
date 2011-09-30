@@ -42,7 +42,7 @@ interface INotORM_Structure_Trans {
  */
 class NotORM_Structure_Trans extends NotORM_Structure_Convention implements INotORM_Structure_Trans {
 
-	private $connection;
+	private $connection, $cache = 'cache.txt';
 	protected $transTable, $transPrimary, $transLang;
 	protected $langPrimary, $langSecondary;
 	public $db;
@@ -54,7 +54,8 @@ class NotORM_Structure_Trans extends NotORM_Structure_Convention implements INot
 	*/
 	function __construct($connection,
 				$primary = 'id', $foreign = '%s_id', $table = '%s',
-				$transTable = '%s_trans', $transPrimary = '%s_id', $transLang = 'language') {
+				$transTable = '%s_trans', $transPrimary = '%s_id', $transLang = 'language')
+	{
 		parent::__construct($primary, $foreign, $table);
 		$this->connection = $connection;
 		$this->transTable = $transTable;
@@ -88,21 +89,22 @@ class NotORM_Structure_Trans extends NotORM_Structure_Convention implements INot
 	}
 
 	public function getDb() {
-		if (!$this->db) $this->initDatabase();
+		$this->initDatabase();
 		return $this->db;
 	}
 
 	public function tableExists($table) {
-		if (!$this->db) $this->initDatabase();
+		$this->initDatabase();
 		return array_key_exists($table, $this->db);
 	}
 
 	public function getColumns($table) {
-		if (!$this->db) $this->initDatabase();
+		$this->initDatabase();
 		return $this->db[$table];
 	}
 
 	public function hasTableColumn($table, $column) {
+		$this->initDatabase();
 		return isset ($this->db[$table][$column]);
 	}
 
@@ -116,8 +118,16 @@ class NotORM_Structure_Trans extends NotORM_Structure_Convention implements INot
 	 * @todo may be I serialize it?
 	 */
 	private function initDatabase() {
+		if ($this->db) return;
+		// @todo cache for structure
+//		if (file_exists(__DIR__ . '/' . $this->cache)) {
+//			$cache = file_get_contents(__DIR__ . '/' . $this->cache);
+//			$this->db = unserialize($cache);
+//			return;
+//		}
 		$query = "
-			SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM information_schema.COLUMNS
+			SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+			FROM information_schema.COLUMNS
 			WHERE TABLE_SCHEMA = DATABASE()
 		";
 		$database = $this->connection->query($query)->fetchAll(PDO::FETCH_GROUP + PDO::FETCH_NUM);
@@ -126,6 +136,10 @@ class NotORM_Structure_Trans extends NotORM_Structure_Convention implements INot
 				$this->db[$table][$value[0]] = $value[1];
 			}
 		}
+//		if (file_exists($this->cache)) {
+//			\Nette\Diagnostics\Debugger::barDump('exists', __METHOD__ . ':' . __LINE__);
+//		}
+//		file_put_contents(__DIR__ . '/' . $this->cache, serialize($this->db));
 	}
 
 
